@@ -1,0 +1,15 @@
+PODS:
+  - PopupDialog (0.5.0)
+  - UIImageColors (1.2.1)
+
+DEPENDENCIES:
+  - PopupDialog (~> 0.5)
+  - UIImageColors (~> 1.2.1)
+
+SPEC CHECKSUMS:
+  PopupDialog: 9890441b81105b9076757af2afe2b037be682f3e
+  UIImageColors: 4daac49e88772d37d3f5a02b7abec9f85346497c
+
+PODFILE CHECKSUM: dcaf046249236dd2454ac4a7ff87d3e19d187d48
+
+COCOAPODS: 1.0.1
