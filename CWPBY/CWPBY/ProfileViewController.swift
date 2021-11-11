@@ -13,7 +13,7 @@ class ProfileViewController: UIViewController {
     /// 版本信息Label
     @IBOutlet private weak var versionLabel: UILabel! {
         didSet {
-            let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
+            let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.1"
             versionLabel.text = "version: \(version)"
         }
     }

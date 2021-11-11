@@ -25,7 +25,7 @@ open class FRDToast: NSObject {
   /**
     设置文本字体，如果不设置该属性，缺省为 HelveticaNeue-Medium 字体。
    */
-  open static var titleFont = UIFont(name:"HelveticaNeue-Medium", size:15) {
+    public static var titleFont = UIFont(name:"HelveticaNeue-Medium", size:15) {
     didSet {
       sharedToast.toastView.titleFont = titleFont
     }
@@ -76,7 +76,7 @@ open class FRDToast: NSObject {
       for window in UIApplication.shared.windows {
         let windowOnMainScreen = window.screen == UIScreen.main
         let windowIsVisible = !window.isHidden && window.alpha > 0
-        let windowLevelNormal = window.windowLevel == UIWindowLevelNormal
+          let windowLevelNormal = window.windowLevel == UIWindow.Level.normal
 
         if windowOnMainScreen && windowIsVisible && windowLevelNormal {
           window.addSubview(overlayView)
@@ -84,7 +84,7 @@ open class FRDToast: NSObject {
         }
       }
     } else {
-      overlayView.superview?.bringSubview(toFront: overlayView)
+      overlayView.superview?.bringSubviewToFront(overlayView)
     }
 
     switch maskType {
@@ -141,7 +141,7 @@ open class FRDToast: NSObject {
           }
 
           self.fadeOutTimer = Timer(timeInterval: self.toastShowTime, target: self, selector: #selector(self.dismiss), userInfo: nil, repeats: false)
-          RunLoop.main.add(self.fadeOutTimer!, forMode: RunLoopMode.commonModes)
+            RunLoop.main.add(self.fadeOutTimer!, forMode: RunLoop.Mode.common)
         }
     })
   }

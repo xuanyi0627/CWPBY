@@ -40,17 +40,17 @@ extension CGColor {
 
 extension UIColor {
     
-    public var isDarkColor: Bool {
+    var isDarkColor: Bool {
         let RGB = self.cgColor.components
         return (0.2126 * RGB[0] + 0.7152 * RGB[1] + 0.0722 * RGB[2]) < 0.5
     }
     
-    public var isBlackOrWhite: Bool {
+    var isBlackOrWhite: Bool {
         let RGB = self.cgColor.components
         return (RGB[0] > 0.91 && RGB[1] > 0.91 && RGB[2] > 0.91) || (RGB[0] < 0.09 && RGB[1] < 0.09 && RGB[2] < 0.09)
     }
     
-    func isDistinct(_ compareColor: UIColor) -> Bool {
+    func isDistinct(compareColor: UIColor) -> Bool {
         let bg = self.cgColor.components
         let fg = compareColor.cgColor.components
         let threshold: CGFloat = 0.25
@@ -66,7 +66,7 @@ extension UIColor {
         return false
     }
     
-    func colorWithMinimumSaturation(_ minSaturation: CGFloat) -> UIColor {
+    func colorWithMinimumSaturation(minSaturation: CGFloat) -> UIColor {
         var hue: CGFloat = 0.0
         var saturation: CGFloat = 0.0
         var brightness: CGFloat = 0.0
@@ -80,7 +80,7 @@ extension UIColor {
         }
     }
     
-    func isContrastingColor(_ compareColor: UIColor) -> Bool {
+    func isContrastingColor(compareColor: UIColor) -> Bool {
         let bg = self.cgColor.components
         let fg = compareColor.cgColor.components
         
@@ -97,7 +97,7 @@ extension UIColor {
 }
 
 extension UIImage {
-    fileprivate func resizeForUIImageColors(_ newSize: CGSize) -> UIImage {
+    private func resizeForUIImageColors(newSize: CGSize) -> UIImage {
         UIGraphicsBeginImageContextWithOptions(newSize, false, 0)
         defer {
             UIGraphicsEndImageContext()
@@ -117,9 +117,9 @@ extension UIImage {
      - parameter scaleDownSize:     Downscale size of image for sampling, if `CGSize.zero` is provided, the sample image is rescaled to a width of 250px and the aspect ratio height.
      - parameter completionHandler: `UIImageColors` for this image.
      */
-    public func getColors(_ scaleDownSize: CGSize = CGSize.zero, completionHandler: @escaping (UIImageColors) -> Void) {
+    public func getColors(scaleDownSize: CGSize = CGSize.zero, completionHandler: @escaping (UIImageColors) -> Void) {
         DispatchQueue.global().async {
-            let result = self.getColors(scaleDownSize)
+            let result = self.getColors(scaleDownSize: scaleDownSize)
             
             DispatchQueue.main.async {
                 completionHandler(result)
@@ -135,7 +135,7 @@ extension UIImage {
      
      - returns: `UIImageColors` for this image.
      */
-    public func getColors(_ scaleDownSize: CGSize = CGSize.zero) -> UIImageColors {
+    public func getColors(scaleDownSize: CGSize = CGSize.zero) -> UIImageColors {
         
         var scaleDownSize = scaleDownSize
         
@@ -147,7 +147,7 @@ extension UIImage {
         
         var result = UIImageColors()
         
-        let cgImage = self.resizeForUIImageColors(scaleDownSize).cgImage!
+        let cgImage = self.resizeForUIImageColors(newSize: scaleDownSize).cgImage!
         let width = cgImage.width
         let height = cgImage.height
         
@@ -244,7 +244,7 @@ extension UIImage {
         let findDarkTextColor = !result.backgroundColor.isDarkColor
         
         while var kolor = enumerator.nextObject() as? UIColor {
-            kolor = kolor.colorWithMinimumSaturation(0.15)
+            kolor = kolor.colorWithMinimumSaturation(minSaturation: 0.15)
             if kolor.isDarkColor == findDarkTextColor {
                 let colorCount = imageColors.count(for: kolor)
                 sortedColors.add(PCCountedColor(color: kolor, count: colorCount))
@@ -256,17 +256,17 @@ extension UIImage {
             let kolor = (curContainer as! PCCountedColor).color
             
             if result.primaryColor == nil {
-                if kolor.isContrastingColor(result.backgroundColor) {
+                if kolor.isContrastingColor(compareColor: result.backgroundColor) {
                     result.primaryColor = kolor
                 }
             } else if result.secondaryColor == nil {
-                if !result.primaryColor.isDistinct(kolor) || !kolor.isContrastingColor(result.backgroundColor) {
+                if !result.primaryColor.isDistinct(compareColor: kolor) || !kolor.isContrastingColor(compareColor: result.backgroundColor) {
                     continue
                 }
                 
                 result.secondaryColor = kolor
             } else if result.detailColor == nil {
-                if !result.secondaryColor.isDistinct(kolor) || !result.primaryColor.isDistinct(kolor) || !kolor.isContrastingColor(result.backgroundColor) {
+                if !result.secondaryColor.isDistinct(compareColor: kolor) || !result.primaryColor.isDistinct(compareColor: kolor) || !kolor.isContrastingColor(compareColor: result.backgroundColor) {
                     continue
                 }
                 

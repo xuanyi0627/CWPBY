@@ -129,10 +129,10 @@ class SelectImageViewController: UIViewController, UIImagePickerControllerDelega
     /// - Parameters:
     ///   - picker: 系统相册
     ///   - info: 图片的相关属性
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+    private func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         
         // 获取到编辑后的图片，如果没有用占位图片代替
-        faceImage = info[UIImagePickerControllerEditedImage] as? UIImage ?? UIImage(named: "temp_face")!
+        faceImage = info[UIImagePickerController.InfoKey.editedImage.rawValue] as? UIImage ?? UIImage(named: "temp_face")!
         dismiss(animated: true, completion: {
             // 选择后进入预览页面
             self.performSegue(withIdentifier: StoryboardSegue.ShowPreviewSegue, sender: nil)
